@@ -28,7 +28,7 @@ module.exports = {
 		noParse: /^(vue|vue-router|vuex|vuex-router-sync)$/,
 		rules: [
 			{
-				test: /\.vue$/,
+				test: /\.(vue)(\?.*)?$/,
 				use: {
 					loader: 'vue-loader',
 					options: {
@@ -37,7 +37,7 @@ module.exports = {
 				},
 			},
 			{
-				test: /\.s?css$/,
+				test: /\.(s?css|sass)(\?.*)?$/,
 				use: [
 					'vue-style-loader',
 					'style-loader',
@@ -49,19 +49,7 @@ module.exports = {
 				],
 			},
 			{
-				test: /\.sass$/,
-				use: [
-					'vue-style-loader',
-					'style-loader',
-					'css-loader',
-					'postcss-loader',
-					{
-						loader: 'sass-loader',
-					},
-				],
-			},
-			{
-				test: /\.ts$/,
+				test: /\.(tsx?)(\?.*)?$/,
 				exclude: /node_modules/,
 				use: [
 					{
@@ -76,22 +64,7 @@ module.exports = {
 				],
 			},
 			{
-				test: /\.tsx$/,
-				exclude: /node_modules/,
-				use: [
-					{
-						loader: 'babel-loader',
-					},
-					{
-						loader: 'ts-loader',
-						options: {
-							appendTsxSuffixTo: ['\\.vue$'],
-						},
-					},
-				],
-			},
-			{
-				test: /\.js$/,
+				test: /\.(js)(\?.*)?$/,
 				exclude: /node_modules/,
 				use: ['babel-loader'],
 			},
@@ -199,21 +172,21 @@ module.exports = {
 			exclude: [],
 			runtimeCaching: [
 				{
-					urlPattern: /\.(?:png|jpe?g|gif|webp|svg)$/,
+					urlPattern: /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/,
 					handler: 'CacheFirst',
 					options: {
 						cacheName: 'images-cache',
 					},
 				},
 				{
-					urlPattern: /\.(?:mp4|webm|ogg|mp3|wav|flac|aac)$/,
+					urlPattern: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
 					handler: 'CacheFirst',
 					options: {
 						cacheName: 'videos-cache',
 					},
 				},
 				{
-					urlPattern: /\.(?:woff2?|eot|ttf|otf)$/,
+					urlPattern: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
 					handler: 'CacheFirst',
 					options: {
 						cacheName: 'fonts-cache',
@@ -239,11 +212,21 @@ module.exports = {
 		new BundleAnalyzerPlugin({
 			openAnalyzer: false,
 		}),
+		{
+			apply: compiler => {
+				compiler.hooks.done.tap('DonePlugin', stats => {
+					console.log('Compile is done !');
+					setTimeout(() => {
+						process.exit(0);
+					});
+				});
+			},
+		},
 	],
 	devServer: {
 		host: 'localhost',
 		port: 8000,
 		hot: true,
-		overlay: false,
+		open: true,
 	},
 };
