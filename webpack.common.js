@@ -3,8 +3,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-const { GenerateSW } = require('workbox-webpack-plugin');
-const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin');
+const { ESBuildPlugin } = require('esbuild-loader');
 
 module.exports = {
 	cache: { type: 'memory' },
@@ -40,22 +39,17 @@ module.exports = {
 					'style-loader',
 					'css-loader',
 					'postcss-loader',
-					{
-						loader: 'sass-loader',
-					},
+					'sass-loader',
 				],
 			},
 			{
 				test: /\.(tsx?)(\?.*)?$/,
-				exclude: /node_modules/,
 				use: [
 					{
 						loader: 'esbuild-loader',
-					},
-					{
-						loader: 'ts-loader',
 						options: {
-							appendTsSuffixTo: ['\\.vue$'],
+							loader: 'tsx',
+							target: 'es2015',
 						},
 					},
 				],
@@ -63,7 +57,14 @@ module.exports = {
 			{
 				test: /\.(js)(\?.*)?$/,
 				exclude: /node_modules/,
-				use: ['esbuild-loader'],
+				use: [
+					{
+						loader: 'esbuild-loader',
+						options: {
+							target: 'es2015',
+						},
+					},
+				],
 			},
 			{
 				test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
@@ -115,5 +116,6 @@ module.exports = {
 			},
 		}),
 		new VueLoaderPlugin(),
+		new ESBuildPlugin(),
 	],
 };
