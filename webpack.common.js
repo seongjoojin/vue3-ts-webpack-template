@@ -86,16 +86,16 @@ module.exports = {
 	plugins: [
 		new HtmlPlugin({
 			title: 'vue3-ts-webpack-template',
-			template: './public/index.html',
+			template: './index.html',
 		}),
 		new CopyPlugin({
 			patterns: [
 				{
 					from: 'public',
-					to: 'dist',
+					to: '',
 					toType: 'dir',
 					globOptions: {
-						ignore: ['.DS_Store', 'index.html'],
+						ignore: ['.DS_Store'],
 					},
 				},
 			],
