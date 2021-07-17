@@ -5,7 +5,6 @@
 - Vue3
 - Webpack
 - SCSS
-- Babel
 - PostCSS
 - Autoprefixer
 - ESLint
