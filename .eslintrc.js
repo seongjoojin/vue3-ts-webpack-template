@@ -13,7 +13,6 @@ module.exports = {
 	],
 	plugins: [],
 	parserOptions: {
-		parser: 'babel-eslint',
 		ecmaVersion: 2020,
 	},
 	rules: {
