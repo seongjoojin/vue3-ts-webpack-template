@@ -9,8 +9,8 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const BundleAnalyzerPlugin =
 	require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const { extendDefaultPlugins } = require('svgo');
-const { ESBuildPlugin } = require('esbuild-loader');
 
 module.exports = merge(common, {
 	mode: 'production',
@@ -73,10 +73,26 @@ module.exports = merge(common, {
 			exclude: /node_modules/,
 			minimizerOptions: {
 				plugins: [
-					['gifsicle', { interlaced: true }],
-					['jpegtran', { progressive: true }],
-					['optipng', { optimizationLevel: 5 }],
-					['svgo'],
+					'gifsicle',
+					'mozjpeg',
+					'pngquant',
+					[
+						'svgo',
+						{
+							plugins: extendDefaultPlugins([
+								{
+									name: 'removeViewBox',
+									active: false,
+								},
+								{
+									name: 'addAttributesToSVGElement',
+									params: {
+										attributes: [{ xmlns: 'http://www.w3.org/2000/svg' }],
+									},
+								},
+							]),
+						},
+					],
 				],
 			},
 		}),
@@ -93,7 +109,7 @@ module.exports = merge(common, {
 			new CssMinimizerPlugin({
 				parallel: os.cpus().length - 1,
 			}),
-			new ESBuildPlugin({
+			new ESBuildMinifyPlugin({
 				sourcemap: false,
 				target: 'es2015',
 				css: true,

@@ -3,7 +3,6 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-const { ESBuildPlugin } = require('esbuild-loader');
 
 module.exports = {
 	cache: { type: 'memory' },
@@ -116,6 +115,5 @@ module.exports = {
 			},
 		}),
 		new VueLoaderPlugin(),
-		new ESBuildPlugin(),
 	],
 };
